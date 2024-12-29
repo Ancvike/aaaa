@@ -1,4 +1,4 @@
-package informatis.core.setting;
+package informatis.core;
 
 import arc.Core;
 import arc.scene.ui.layout.Table;

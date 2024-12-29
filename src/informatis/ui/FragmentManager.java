@@ -1,8 +1,6 @@
-package informatis.ui.fragments;
+package informatis.ui;
 
-import informatis.ui.fragments.sidebar.dialogs.DialogManager;
-import informatis.ui.fragments.sidebar.TroopingFragment;
-import informatis.ui.fragments.sidebar.windows.WindowManager;
+import informatis.ui.sidebar.WindowManager;
 
 import static arc.Core.scene;
 import static mindustry.Vars.ui;
@@ -10,7 +8,6 @@ import static mindustry.Vars.ui;
 public class FragmentManager {
     public static ElementViewFragment elementViewFragment;
     public static QuickSchemFragment quickSchemFragment;
-    public static TileInfoFragment tileInfoFragment;
     public static ServerSearchFragment serverSearchFragment;
     public static SidebarSwitcher sidebarSwitcherFragment;
 
@@ -25,11 +22,8 @@ public class FragmentManager {
         serverSearchFragment = new ServerSearchFragment();
 
         quickSchemFragment = new QuickSchemFragment();
-        tileInfoFragment = new TileInfoFragment();
         sidebarSwitcherFragment = new SidebarSwitcher(
-                    WindowManager.body,
-                    DialogManager.body,
-                    new TroopingFragment() // cache later?
+                    WindowManager.body
             );
     }
 }

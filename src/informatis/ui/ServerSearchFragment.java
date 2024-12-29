@@ -1,4 +1,4 @@
-package informatis.ui.fragments;
+package informatis.ui;
 
 import arc.Core;
 import arc.scene.ui.*;

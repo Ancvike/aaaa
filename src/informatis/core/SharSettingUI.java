@@ -1,4 +1,4 @@
-package informatis.core.setting;
+package informatis.core;
 
 import arc.*;
 import arc.scene.ui.TextButton;
@@ -6,17 +6,16 @@ import arc.scene.ui.layout.*;
 import arc.struct.*;
 import arc.util.Align;
 import mindustry.ui.*;
-import informatis.ui.fragments.FragmentManager;
+import informatis.ui.FragmentManager;
 
 import static arc.Core.*;
-import static informatis.core.setting.SettingHelper.*;
+import static informatis.core.SettingHelper.*;
 import static mindustry.Vars.*;
 
 public class SharSettingUI {
     public static void init(){
         Seq<Seq<SharSetting>> settingSeq = new Seq<>();
         Seq<SharSetting> tapSeq = new Seq<>();
-        addGraphicCheckSetting("tileinfo", true, tapSeq, () -> FragmentManager.tileInfoFragment.rebuildTileInfoTable());
         addGraphicCheckSetting("schem", !mobile, tapSeq, () -> FragmentManager.quickSchemFragment.rebuildBody());
         addGraphicCheckSetting("sidebar", !mobile, tapSeq, () -> FragmentManager.sidebarSwitcherFragment.rebuildSidebarTable());
         addGraphicCheckSetting("elementdebug", false, tapSeq);

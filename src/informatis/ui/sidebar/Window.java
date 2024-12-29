@@ -1,4 +1,4 @@
-package informatis.ui.fragments.sidebar.windows;
+package informatis.ui.sidebar;
 
 import arc.*;
 import arc.func.*;
