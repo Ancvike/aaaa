@@ -162,12 +162,10 @@ public class MapEditorWindow extends Window {
         table.table(buttons -> {
             buttons.top().left();
 
-            displays.each((icon, display) -> {
-                buttons.button(icon, Styles.clearTogglei, ()->{
-                    if(table.getChildren().size > 1) table.getChildren().get(table.getChildren().size-1).remove();
-                    table.add(display).grow();
-                }).row();
-            });
+            displays.each((icon, display) -> buttons.button(icon, Styles.clearTogglei, ()->{
+                if(table.getChildren().size > 1) table.getChildren().get(table.getChildren().size-1).remove();
+                table.add(display).grow();
+            }).row());
         }).growY();
     }
 
@@ -185,9 +183,7 @@ public class MapEditorWindow extends Window {
 
                 Label label = rules.add("Block Health: ").get();
                 Slider slider = new Slider(0, 100, 1, false);
-                slider.changed(() -> {
-                    label.setText("Block Health: "+(int)slider.getValue()+"%");
-                });
+                slider.changed(() -> label.setText("Block Health: "+(int)slider.getValue()+"%"));
                 slider.change();
                 slider.moved(hp->Groups.build.each(b->b.health(b.block.health*hp/100)));
                 rules.add(slider);
