@@ -1,4 +1,4 @@
-package informatis.ui.sidebar;
+package informatis.ui;
 
 import arc.*;
 import arc.func.*;
