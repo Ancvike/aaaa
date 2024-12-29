@@ -23,17 +23,11 @@ public class SVars {
 
     static {
         Events.on(EventType.ClientLoadEvent.class, e -> {
-            for(UnitType unitType : content.units()) {
+            for (UnitType unitType : content.units()) {
                 ShieldRegenFieldAbility ability = (ShieldRegenFieldAbility) unitType.abilities.find(abil -> abil instanceof ShieldRegenFieldAbility);
-                if(ability == null) continue;
-                if(ability.max > maxShieldAmongUnits) maxShieldAmongUnits = ability.max;
+                if (ability == null) continue;
+                if (ability.max > maxShieldAmongUnits) maxShieldAmongUnits = ability.max;
             }
         });
-    }
-}
-
-class Cl {
-    public Cl(string asdf = "how") {
-
     }
 }
