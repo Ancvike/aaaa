@@ -9,7 +9,6 @@ public class DialogManager {
     public static Table body;
 
     public static void init() {
-        resourcePreview = new ResourcePreviewDialog();
 
         body = new Table(t -> {
            t.button(Icon.file, () -> resourcePreview.show());

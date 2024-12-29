@@ -2,8 +2,6 @@ package informatis;
 
 import informatis.core.setting.SharSettingUI;
 import informatis.core.UpdateChecker;
-import informatis.ui.fragments.sidebar.windows.tools.draws.OverDrawManager;
-import informatis.ui.fragments.sidebar.windows.tools.tools.ToolManager;
 import informatis.ui.fragments.sidebar.dialogs.DialogManager;
 import informatis.ui.fragments.sidebar.windows.*;
 import informatis.ui.fragments.FragmentManager;
@@ -22,8 +20,6 @@ public class Informatis extends Mod {
             WindowManager.init();
             DialogManager.init();
             FragmentManager.init();
-            OverDrawManager.init();
-            ToolManager.init();
             SVars.init();
             UpdateChecker.init();
         });
