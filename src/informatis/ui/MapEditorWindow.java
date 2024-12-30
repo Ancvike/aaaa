@@ -145,15 +145,6 @@ public class MapEditorWindow extends Window {
         table.top().background(Styles.black8);
 
         ObjectMap<Drawable, Element> displays = new ObjectMap<>();
-        displays.put(Icon.map, new Table(display -> {
-            display.table(t -> {
-                t.left().background(Tex.underline2);
-                t.label(() -> drawBlock == null ? "[gray]None[]" : "[accent]" + drawBlock.localizedName + "[] " + drawBlock.emoji());
-                t.add(search).growX().pad(8).name("search");
-            }).growX().row();
-            display.pane(Styles.noBarPane, rebuildEditor()).grow().name("editor-pane").get().setScrollingDisabled(true, false);
-            display.row();
-        }));
         displays.put(Icon.settings, new Table(display -> {
             display.pane(Styles.noBarPane, rebuildRule()).grow().name("rule-pane").get().setScrollingDisabled(true, false);
             display.row();
