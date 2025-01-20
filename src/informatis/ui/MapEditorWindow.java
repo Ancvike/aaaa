@@ -11,7 +11,6 @@ import mindustry.graphics.*;
 import arc.*;
 import arc.input.*;
 import arc.math.*;
-import arc.scene.ui.*;
 import arc.scene.ui.layout.*;
 import arc.util.*;
 import mindustry.content.*;
@@ -22,7 +21,6 @@ import mindustry.world.*;
 import static mindustry.Vars.*;
 
 public class MapEditorWindow extends Window {
-    TextField search;
     EditorTool tool;
     final Vec2[][] brushPolygons = new Vec2[MapEditor.brushSizes.length][0];
     float heat;
@@ -134,11 +132,6 @@ public class MapEditorWindow extends Window {
 
         ObjectMap<Drawable, Element> displays = new ObjectMap<>();
         displays.put(Icon.map, new Table(display -> {
-            display.table(t -> {
-                t.left().background(Tex.underline2);
-                t.label(() -> drawBlock == null ? "[gray]None[]" : "[accent]" + drawBlock.localizedName + "[] " + drawBlock.emoji());
-                t.add(search).growX().pad(8).name("search");
-            }).growX().row();
             display.pane(Styles.noBarPane, new Table()).grow().name("editor-pane").get().setScrollingDisabled(true, false);
             display.row();
         }));
