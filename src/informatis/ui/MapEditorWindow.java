@@ -2,9 +2,6 @@ package informatis.ui;
 
 import arc.graphics.g2d.*;
 import arc.math.geom.*;
-import arc.scene.*;
-import arc.scene.style.*;
-import arc.struct.*;
 import mindustry.editor.*;
 import mindustry.game.*;
 import mindustry.graphics.*;
@@ -130,23 +127,11 @@ public class MapEditorWindow extends Window {
         table.left();
         table.top().background(Styles.black8);
 
-        ObjectMap<Drawable, Element> displays = new ObjectMap<>();
-        displays.put(Icon.map, new Table(display -> {
-            display.pane(Styles.noBarPane, new Table()).grow().name("editor-pane").get().setScrollingDisabled(true, false);
-            display.row();
-        }));
-        displays.put(Icon.settings, new Table(display -> {
-            display.pane(Styles.noBarPane, new Table()).grow().name("rule-pane").get().setScrollingDisabled(true, false);
-            display.row();
-        }));
-
-        table.table(buttons -> {
-            buttons.top().left();
-
-            displays.each((icon, display) -> buttons.button(icon, Styles.clearTogglei, () -> {
-                if (table.getChildren().size > 1) table.getChildren().get(table.getChildren().size - 1).remove();
-                table.add(display).grow();
-            }).row());
-        }).growY();
+        table.button(Icon.map, Styles.clearTogglei, () -> {
+            if (table.getChildren().size > 1) table.getChildren().get(table.getChildren().size - 1).remove();
+        });
+        table.button(Icon.settings, Styles.clearTogglei, () -> {
+            if (table.getChildren().size > 1) table.getChildren().get(table.getChildren().size - 1).remove();
+        });
     }
 }
