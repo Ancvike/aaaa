@@ -9,22 +9,17 @@ import mindustry.editor.*;
 import mindustry.game.*;
 import mindustry.graphics.*;
 import arc.*;
-import arc.func.*;
-import arc.graphics.*;
 import arc.input.*;
 import arc.math.*;
-import arc.scene.event.*;
 import arc.scene.ui.*;
 import arc.scene.ui.layout.*;
 import arc.scene.utils.*;
 import arc.util.*;
-import mindustry.*;
 import mindustry.content.*;
 import mindustry.gen.*;
 import mindustry.ui.*;
 import mindustry.world.*;
 
-import static informatis.ui.WindowManager.mapEditorWindow;
 import static mindustry.Vars.*;
 
 public class MapEditorWindow extends Window {
@@ -38,7 +33,6 @@ public class MapEditorWindow extends Window {
     int lastx, lasty;
     float lastw, lasth;
 
-    public static Team drawTeam = Team.sharded;
     public static Block drawBlock = Blocks.router;
 
     public MapEditorWindow() {
