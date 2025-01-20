@@ -13,7 +13,6 @@ import arc.input.*;
 import arc.math.*;
 import arc.scene.ui.*;
 import arc.scene.ui.layout.*;
-import arc.scene.utils.*;
 import arc.util.*;
 import mindustry.content.*;
 import mindustry.gen.*;
@@ -130,10 +129,6 @@ public class MapEditorWindow extends Window {
 
     @Override
     public void buildBody(Table table) {
-        search = Elem.newField(null, f -> {
-        });
-        search.setMessageText(Core.bundle.get("players.search") + "...");
-
         table.left();
         table.top().background(Styles.black8);
 
