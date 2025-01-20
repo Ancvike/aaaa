@@ -1,7 +1,7 @@
 package informatis;
 
 import arc.Events;
-import informatis.ui.fragments.sidebar.windows.WindowManager;
+import informatis.ui.WindowManager;
 import informatis.ui.fragments.sidebar.windows.tools.tools.ToolManager;
 import mindustry.game.EventType.ClientLoadEvent;
 import mindustry.mod.Mod;
