@@ -200,7 +200,7 @@ public class MapEditorWindow extends Window {
             table.top();
             Seq<Block> blocks = Vars.content.blocks().copy();
             if(!search.getText().isEmpty()){
-                blocks.filter(p -> p.name.toLowerCase().contains(search.getText().toLowerCase())||p.localizedName.toLowerCase().contains(search.getText().toLowerCase()));
+                blocks.select(p -> p.name.toLowerCase().contains(search.getText().toLowerCase())||p.localizedName.toLowerCase().contains(search.getText().toLowerCase()));
             }
             table.table(select-> this.buildBlockSelection(null, select, blocks, ()-> drawBlock, block-> drawBlock =block, false)).marginTop(16f).marginBottom(16f).row();
             table.image().height(4f).color(Pal.gray).growX().row();

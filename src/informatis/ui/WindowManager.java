@@ -8,16 +8,11 @@ import mindustry.ui.*;
 
 public class WindowManager {
     public static final Seq<Window> windows = new Seq<>();
-    public static UnitWindow unitWindow;
     public static MapEditorWindow mapEditorWindow;
     public static Table body;
 
     public static void init() {
         windows.addAll(
-                unitWindow = new UnitWindow(),
-                new WaveWindow(),
-                new CoreWindow(),
-                new ToolWindow(),
                 mapEditorWindow = new MapEditorWindow()
         );
 
