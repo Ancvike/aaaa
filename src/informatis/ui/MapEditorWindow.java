@@ -2,9 +2,6 @@ package informatis.ui;
 
 import arc.graphics.g2d.*;
 import arc.math.geom.*;
-import arc.scene.*;
-import arc.scene.style.*;
-import arc.struct.*;
 import mindustry.editor.*;
 import mindustry.game.*;
 import mindustry.graphics.*;
@@ -26,11 +23,9 @@ import static mindustry.Vars.*;
 public class MapEditorWindow extends Window {
     EditorTool tool;
     final Vec2[][] brushPolygons = new Vec2[MapEditor.brushSizes.length][0];
-    float heat;
 
     boolean drawing;
     int lastx, lasty;
-    float lastw, lasth;
 
     public static Block drawBlock = Blocks.router;
 
@@ -76,17 +71,6 @@ public class MapEditorWindow extends Window {
         });
 
         Events.run(EventType.Trigger.update, () -> {
-
-            //TODO make it more responsive, time -> width delta detect
-            heat += Time.delta;
-            if (heat >= 60f) {
-                heat = 0f;
-
-                if (lastw != getWidth() || lasth != getHeight()) resetPane();
-                lastw = width;
-                lasth = height;
-            }
-
             Tile tile = world.tileWorld(Core.input.mouseWorldX(), Core.input.mouseWorldY());
             if (tile == null || tool == null|| drawBlock == null || hasMouse()) return;
             if (Core.input.isTouched()) {
@@ -108,61 +92,32 @@ public class MapEditorWindow extends Window {
         table.left();
         table.top().background(Styles.black8);
 
-        ObjectMap<Drawable, Element> displays = new ObjectMap<>();
-        displays.put(Icon.map, new Table(display -> {
-            display.pane(Styles.noBarPane, rebuildEditor()).grow().name("editor-pane").get().setScrollingDisabled(true, false);
-            display.row();
-        }));
+        table.table(tools -> {
+            tools.top().left();
+            tools.table(title -> title.left().background(Tex.underline2).add("Tools [accent]" + (tool == null ? "" : tool.name()) + "[]")).growX().row();
+            tools.table(bt -> {
+                Cons<EditorTool> addTool = tool -> {
+                    ImageButton button = new ImageButton(ui.getIcon(tool.name()), Styles.clearTogglei);
+                    button.clicked(() -> {
+                        button.toggle();
+                        if (this.tool == tool) this.tool = null;
+                        else this.tool = tool;
+                    });
+                    button.update(() -> button.setChecked(this.tool == tool));
 
-        table.table(buttons -> {
-            buttons.top().left();
+                    Label mode = new Label("");
+                    mode.setColor(Pal.remove);
+                    mode.update(() -> mode.setText(""));
+                    mode.setAlignment(Align.bottomRight, Align.bottomRight);
+                    mode.touchable = Touchable.disabled;
 
-            displays.each((icon, display) -> buttons.button(icon, Styles.clearTogglei, () -> {
-                if (table.getChildren().size > 1) table.getChildren().get(table.getChildren().size - 1).remove();
-                table.add(display).grow();
-            }).row());
-        }).growY();
-    }
+                    bt.stack(button, mode);
+                };
 
-    void resetPane() {
-        ScrollPane pane = find("editor-pane");
-        if (pane != null) pane.setWidget(rebuildEditor());
-    }
+                addTool.get(EditorTool.eraser);
+            });
+        }).left().width(100).margin(8f).growY();
 
-    Table rebuildEditor() {
-        return new Table(table -> {
-            table.top();
-            table.table(tools -> {
-                tools.top().left();
-                tools.table(title -> title.left().background(Tex.underline2).add("Tools [accent]" + (tool == null ? "" : tool.name()) + "[]")).growX().row();
-                tools.table(bt -> {
-                    Cons<EditorTool> addTool = tool -> {
-                        ImageButton button = new ImageButton(ui.getIcon(tool.name()), Styles.clearTogglei);
-                        button.clicked(() -> {
-                            button.toggle();
-                            if (this.tool == tool) this.tool = null;
-                            else this.tool = tool;
-                            resetPane();
-                        });
-                        button.update(() -> button.setChecked(this.tool == tool));
-
-                        Label mode = new Label("");
-                        mode.setColor(Pal.remove);
-                        mode.update(() -> mode.setText(""));
-                        mode.setAlignment(Align.bottomRight, Align.bottomRight);
-                        mode.touchable = Touchable.disabled;
-
-                        bt.stack(button, mode);
-                    };
-
-                    addTool.get(EditorTool.eraser);
-                });
-            }).left().width(getDisplayWidth() / 2).margin(8f).growY();
-        });
-    }
-
-    float getDisplayWidth() {
-        return getWidth() - (find("buttons") == null ? 1 : find("buttons").getWidth());
     }
 
     enum EditorTool {
