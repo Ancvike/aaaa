@@ -162,12 +162,10 @@ public class MapEditorWindow extends Window {
         table.table(buttons -> {
             buttons.top().left();
 
-            displays.each((icon, display) -> {
-                buttons.button(icon, Styles.clearTogglei, ()->{
-                    if(table.getChildren().size > 1) table.getChildren().get(table.getChildren().size-1).remove();
-                    table.add(display).grow();
-                }).row();
-            });
+            displays.each((icon, display) -> buttons.button(icon, Styles.clearTogglei, ()->{
+                if(table.getChildren().size > 1) table.getChildren().get(table.getChildren().size-1).remove();
+                table.add(display).grow();
+            }).row());
         }).growY();
     }
 
@@ -185,9 +183,7 @@ public class MapEditorWindow extends Window {
 
                 Label label = rules.add("Block Health: ").get();
                 Slider slider = new Slider(0, 100, 1, false);
-                slider.changed(() -> {
-                    label.setText("Block Health: "+(int)slider.getValue()+"%");
-                });
+                slider.changed(() -> label.setText("Block Health: "+(int)slider.getValue()+"%"));
                 slider.change();
                 slider.moved(hp->Groups.build.each(b->b.health(b.block.health*hp/100)));
                 rules.add(slider);
@@ -200,11 +196,11 @@ public class MapEditorWindow extends Window {
             table.top();
             Seq<Block> blocks = Vars.content.blocks().copy();
             if(!search.getText().isEmpty()){
-                blocks.filter(p -> p.name.toLowerCase().contains(search.getText().toLowerCase())||p.localizedName.toLowerCase().contains(search.getText().toLowerCase()));
+                blocks.select(p -> p.name.toLowerCase().contains(search.getText().toLowerCase())||p.localizedName.toLowerCase().contains(search.getText().toLowerCase()));
             }
-            table.table(select-> this.buildBlockSelection(null, select, blocks, ()-> drawBlock, block-> drawBlock =block, false)).marginTop(16f).marginBottom(16f).row();
+            table.table(select-> this.buildBlockSelection(select, blocks, ()-> drawBlock, block-> drawBlock =block, false)).marginTop(16f).marginBottom(16f).row();
             table.image().height(4f).color(Pal.gray).growX().row();
-            table.table(select-> this.buildTeamSelection(player.team(), select, Seq.with(Team.all), ()->drawTeam, block->drawTeam=block, false)).marginTop(16f).marginBottom(16f).row();
+            table.table(select-> this.buildTeamSelection(select, Seq.with(Team.all), ()->drawTeam, block->drawTeam=block, false)).marginTop(16f).marginBottom(16f).row();
             table.image().height(4f).color(Pal.gray).growX().row();
             table.table(body-> {
                 body.table(tools -> {
@@ -281,7 +277,7 @@ public class MapEditorWindow extends Window {
         });
     }
 
-    <T extends Block> void buildBlockSelection(@Nullable Block block, Table table, Seq<T> items, Prov<T> holder, Cons<T> consumer, boolean closeSelect){
+    <T extends Block> void buildBlockSelection(Table table, Seq<T> items, Prov<T> holder, Cons<T> consumer, boolean closeSelect){
         ButtonGroup<ImageButton> group = new ButtonGroup<>();
         group.setMinCheckCount(0);
         Table cont = new Table();
@@ -323,7 +319,7 @@ public class MapEditorWindow extends Window {
     }
     float blockScroll;
 
-    <T extends Team> void buildTeamSelection(@Nullable Team team, Table table, Seq<T> items, Prov<T> holder, Cons<T> consumer, boolean closeSelect){
+    <T extends Team> void buildTeamSelection(Table table, Seq<T> items, Prov<T> holder, Cons<T> consumer, boolean closeSelect){
         ButtonGroup<ImageButton> group = new ButtonGroup<>();
         group.setMinCheckCount(0);
         Table cont = new Table();
@@ -464,16 +460,6 @@ public class MapEditorWindow extends Window {
     }
 
     enum EditorTool{
-        zoom(KeyCode.v),
-        pick(KeyCode.i){
-            public void touched(int x, int y){
-                if(!Structs.inBounds(x, y, world.width(), world.height())) return;
-                Tile tile = world.tile(x, y);
-                if(tile == null) return;
-
-                drawBlock = tile.block() == Blocks.air || !tile.block().inEditor ? tile.overlay() == Blocks.air ? tile.floor() : tile.overlay() : tile.block();
-            }
-        },
         line(KeyCode.l, "replace", "orthogonal"){
 
             @Override
@@ -677,7 +663,6 @@ public class MapEditorWindow extends Window {
             }
         };
 
-        public static final EditorTool[] all = values();
 
         /** All the internal alternate placement modes of this tool. */
         public final String[] altModes;
@@ -692,11 +677,6 @@ public class MapEditorWindow extends Window {
 
         EditorTool(){
             this(new String[]{});
-        }
-
-        EditorTool(KeyCode code){
-            this(new String[]{});
-            this.key = code;
         }
 
         EditorTool(String... altModes){
