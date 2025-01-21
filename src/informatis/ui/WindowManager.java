@@ -43,7 +43,6 @@ public class WindowManager {
                 t.row();
             }
         }).left();
-
         Vars.ui.hudGroup.fill(t -> t.add(body));
     }
 }

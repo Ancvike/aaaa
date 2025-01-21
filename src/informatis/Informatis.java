@@ -8,6 +8,8 @@ import mindustry.mod.Mod;
 public class Informatis extends Mod {
     @Override
     public void init(){
-        Events.on(ClientLoadEvent.class, e -> WindowManager.init());
+        Events.on(ClientLoadEvent.class, e -> {
+            WindowManager.init();
+        });
     }
 }
