@@ -27,7 +27,6 @@ public class MapEditorWindow extends Window {
     EditorTool tool;
     final Vec2[][] brushPolygons = new Vec2[MapEditor.brushSizes.length][0];
     float heat;
-    float brushSize = 2;
 
     boolean drawing;
     int lastx, lasty;
@@ -67,18 +66,11 @@ public class MapEditorWindow extends Window {
             Tile tile = world.tileWorld(Core.input.mouseWorldX(), Core.input.mouseWorldY());
             if (tile == null || tool == null) return;
 
-            int index = 0;
-            for (int i = 0; i < MapEditor.brushSizes.length; i++) {
-                if (brushSize == MapEditor.brushSizes[i]) {
-                    index = i;
-                    break;
-                }
-            }
             Lines.stroke(Scl.scl(2f), Pal.accent);
 
             if (!drawBlock.isMultiblock() || tool == EditorTool.eraser) {
                 if (tool.edit && (!mobile || drawing)) {
-                    Lines.poly(brushPolygons[index], tile.x * 8 - 4, tile.y * 8 - 4, scaling);
+                    Lines.poly(brushPolygons[2], tile.x * 8 - 4, tile.y * 8 - 4, scaling);
                 }
             }
         });
