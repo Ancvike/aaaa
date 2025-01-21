@@ -75,31 +75,31 @@ public class MapEditorWindow extends Window {
             }
         });
 
-//        Events.run(EventType.Trigger.update, () -> {
-//
-//            //TODO make it more responsive, time -> width delta detect
-//            heat += Time.delta;
-//            if (heat >= 60f) {
-//                heat = 0f;
-//
-//                if (lastw != getWidth() || lasth != getHeight()) resetPane();
-//                lastw = width;
-//                lasth = height;
-//            }
-//
-//            Tile tile = world.tileWorld(Core.input.mouseWorldX(), Core.input.mouseWorldY());
-//            if (tile == null || tool == null|| drawBlock == null || hasMouse()) return;
-//            if (Core.input.isTouched()) {
-//                if (!mobile && !Core.input.keyDown(KeyCode.mouseLeft)) return;
-//                drawing = true;
-//                lastx = tile.x;
-//                lasty = tile.y;
-//            } else {
-//                drawing = false;
-//                lastx = -1;
-//                lasty = -1;
-//            }
-//        });
+        Events.run(EventType.Trigger.update, () -> {
+
+            //TODO make it more responsive, time -> width delta detect
+            heat += Time.delta;
+            if (heat >= 60f) {
+                heat = 0f;
+
+                if (lastw != getWidth() || lasth != getHeight()) resetPane();
+                lastw = width;
+                lasth = height;
+            }
+
+            Tile tile = world.tileWorld(Core.input.mouseWorldX(), Core.input.mouseWorldY());
+            if (tile == null || tool == null|| drawBlock == null || hasMouse()) return;
+            if (Core.input.isTouched()) {
+                if (!mobile && !Core.input.keyDown(KeyCode.mouseLeft)) return;
+                drawing = true;
+                lastx = tile.x;
+                lasty = tile.y;
+            } else {
+                drawing = false;
+                lastx = -1;
+                lasty = -1;
+            }
+        });
     }
 
     @Override
@@ -156,14 +156,6 @@ public class MapEditorWindow extends Window {
                     };
 
                     addTool.get(EditorTool.eraser);
-
-                    ImageButton grid = new ImageButton(Icon.grid, Styles.clearTogglei);
-                    grid.clicked(() -> {
-                        grid.toggle();
-                        Core.settings.put("grid", !Core.settings.getBool("grid"));
-                    });
-                    grid.update(() -> grid.setChecked(Core.settings.getBool("grid")));
-                    bt.add(grid);
                 });
             }).left().width(getDisplayWidth() / 2).margin(8f).growY();
         });
