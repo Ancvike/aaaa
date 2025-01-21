@@ -10,7 +10,6 @@ import mindustry.game.*;
 import mindustry.graphics.*;
 import arc.*;
 import arc.func.*;
-import arc.graphics.*;
 import arc.input.*;
 import arc.math.*;
 import arc.scene.event.*;
@@ -66,7 +65,7 @@ public class MapEditorWindow extends Window {
             }
 
             Tile tile = world.tileWorld(Core.input.mouseWorldX(), Core.input.mouseWorldY());
-            if (tile == null || tool == null || brushSize < 1) return;
+            if (tile == null || tool == null) return;
 
             int index = 0;
             for (int i = 0; i < MapEditor.brushSizes.length; i++) {
@@ -97,7 +96,7 @@ public class MapEditorWindow extends Window {
             }
 
             Tile tile = world.tileWorld(Core.input.mouseWorldX(), Core.input.mouseWorldY());
-            if (tile == null || tool == null || brushSize < 1 || drawBlock == null || hasMouse()) return;
+            if (tile == null || tool == null|| drawBlock == null || hasMouse()) return;
             if (Core.input.isTouched()) {
                 if (!mobile && !Core.input.keyDown(KeyCode.mouseLeft)) return;
                 drawing = true;
@@ -141,74 +140,40 @@ public class MapEditorWindow extends Window {
     Table rebuildEditor() {
         return new Table(table -> {
             table.top();
-            table.table(body -> {
-                body.table(tools -> {
-                    tools.top().left();
-                    tools.table(title -> title.left().background(Tex.underline2).add("Tools [accent]" + (tool == null ? "" : tool.name()) + "[]")).growX().row();
-                    tools.table(bt -> {
-                        Cons<EditorTool> addTool = tool -> {
-                            ImageButton button = new ImageButton(ui.getIcon(tool.name()), Styles.clearTogglei);
-                            button.clicked(() -> {
-                                button.toggle();
-                                if (this.tool == tool) this.tool = null;
-                                else this.tool = tool;
-                                resetPane();
-                            });
-                            button.update(() -> button.setChecked(this.tool == tool));
-
-                            Label mode = new Label("");
-                            mode.setColor(Pal.remove);
-                            mode.update(() -> mode.setText(tool.mode == -1 ? "" : "M" + (tool.mode + 1) + " "));
-                            mode.setAlignment(Align.bottomRight, Align.bottomRight);
-                            mode.touchable = Touchable.disabled;
-
-                            bt.stack(button, mode);
-                        };
-
-                        addTool.get(EditorTool.eraser);
-
-                        ImageButton grid = new ImageButton(Icon.grid, Styles.clearTogglei);
-                        grid.clicked(() -> {
-                            grid.toggle();
-                            Core.settings.put("grid", !Core.settings.getBool("grid"));
+            table.table(tools -> {
+                tools.top().left();
+                tools.table(title -> title.left().background(Tex.underline2).add("Tools [accent]" + (tool == null ? "" : tool.name()) + "[]")).growX().row();
+                tools.table(bt -> {
+                    Cons<EditorTool> addTool = tool -> {
+                        ImageButton button = new ImageButton(ui.getIcon(tool.name()), Styles.clearTogglei);
+                        button.clicked(() -> {
+                            button.toggle();
+                            if (this.tool == tool) this.tool = null;
+                            else this.tool = tool;
+                            resetPane();
                         });
-                        grid.update(() -> grid.setChecked(Core.settings.getBool("grid")));
-                        bt.add(grid);
+                        button.update(() -> button.setChecked(this.tool == tool));
+
+                        Label mode = new Label("");
+                        mode.setColor(Pal.remove);
+                        mode.update(() -> mode.setText(""));
+                        mode.setAlignment(Align.bottomRight, Align.bottomRight);
+                        mode.touchable = Touchable.disabled;
+
+                        bt.stack(button, mode);
+                    };
+
+                    addTool.get(EditorTool.eraser);
+
+                    ImageButton grid = new ImageButton(Icon.grid, Styles.clearTogglei);
+                    grid.clicked(() -> {
+                        grid.toggle();
+                        Core.settings.put("grid", !Core.settings.getBool("grid"));
                     });
-                    tools.row();
-                    Slider slider = new Slider(0, MapEditor.brushSizes.length - 1, 1, false);
-                    slider.moved(f -> brushSize = MapEditor.brushSizes[(int) f]);
-                    for (int j = 0; j < MapEditor.brushSizes.length; j++) {
-                        if (MapEditor.brushSizes[j] == brushSize) {
-                            slider.setValue(j);
-                        }
-                    }
-                    Label label = new Label("Brush: " + brushSize);
-                    label.touchable = Touchable.disabled;
-                    tools.stack(slider, label).width(getDisplayWidth() / 5).center();
-                }).left().width(getDisplayWidth() / 2).margin(8f).growY();
-                body.image().width(4f).height(body.getHeight()).color(Pal.gray).growY();
-                body.table(options -> {
-                    options.top().left();
-                    options.table(title -> title.left().background(Tex.underline2).add("Options [accent]" + (tool != null && tool.mode >= 0 && tool.mode < tool.altModes.length ? tool.altModes[tool.mode] : "") + "[]")).growX().row();
-                    options.table(option -> {
-                        if (tool == null) return;
-
-                        option.top().left();
-                        for (int i = 0; i < tool.altModes.length; i++) {
-                            int mode = i;
-                            String name = tool.altModes[i];
-
-                            option.button(b -> {
-                                b.left().marginLeft(6);
-                                b.setStyle(Styles.clearTogglei);
-                                b.add(Core.bundle.get("toolmode." + name)).left().row();
-                                b.add(Core.bundle.get("toolmode." + name + ".description")).color(Color.lightGray).left();
-                            }, () -> tool.mode = (tool.mode == mode ? -1 : mode)).update(b -> b.setChecked(tool.mode == mode)).margin(12f).growX().row();
-                        }
-                    }).grow();
-                }).left().width(getDisplayWidth() / 2).margin(8f).growY();
-            }).grow();
+                    grid.update(() -> grid.setChecked(Core.settings.getBool("grid")));
+                    bt.add(grid);
+                });
+            }).left().width(getDisplayWidth() / 2).margin(8f).growY();
         });
     }
 
@@ -227,10 +192,6 @@ public class MapEditorWindow extends Window {
          * All the internal alternate placement modes of this tool.
          */
         public final String[] altModes;
-        /**
-         * The current alternate placement mode. -1 is the standard mode, no changes.
-         */
-        public int mode = -1;
         /**
          * Whether this tool causes canvas changes when touched.
          */
