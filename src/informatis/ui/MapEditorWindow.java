@@ -26,7 +26,6 @@ import static informatis.ui.WindowManager.mapEditorWindow;
 import static mindustry.Vars.*;
 
 public class MapEditorWindow extends Window {
-    TextField search;
     EditorTool tool;
     final Vec2[][] brushPolygons = new Vec2[MapEditor.brushSizes.length][0];
     float heat;
@@ -163,8 +162,6 @@ public class MapEditorWindow extends Window {
     Table rebuildEditor() {
         return new Table(table -> {
             table.top();
-            table.table(select -> this.buildTeamSelection(select, Seq.with(Team.all), () -> drawTeam, block -> drawTeam = block, false)).marginTop(16f).marginBottom(16f).row();
-            table.image().height(4f).color(Pal.gray).growX().row();
             table.table(body -> {
                 body.table(tools -> {
                     tools.top().left();
@@ -239,46 +236,6 @@ public class MapEditorWindow extends Window {
             }).grow();
         });
     }
-
-    <T extends Team> void buildTeamSelection(Table table, Seq<T> items, Prov<T> holder, Cons<T> consumer, boolean closeSelect) {
-        ButtonGroup<ImageButton> group = new ButtonGroup<>();
-        group.setMinCheckCount(0);
-        Table cont = new Table();
-        cont.defaults().size(40);
-
-        int i = 0;
-        int row = 2;
-        int max = Math.max(row, Math.round(getDisplayWidth() / 2 / 8 / row / 2));
-
-        for (T item : items) {
-            ImageButton button = cont.button(Tex.whiteui, Styles.clearTogglei, 24, () -> {
-                if (closeSelect) control.input.config.hideConfig();
-            }).group(group).tooltip(t -> t.background(Styles.black8).add(item.localized().replace(search.getText(), "[accent]" + search.getText() + "[]"))).with(img -> img.getStyle().imageUpColor = item.color).get();
-            button.changed(() -> consumer.get(button.isChecked() ? item : null));
-            button.update(() -> button.setChecked(holder.get() == item));
-
-            if (i++ % max == max - 1) {
-                cont.row();
-            }
-        }
-
-        //add extra blank spaces so it looks nice
-        if (i % max != 0) {
-            int remaining = max - (i % max);
-            for (int j = 0; j < remaining; j++) {
-                cont.image(Styles.black6);
-            }
-        }
-
-        ScrollPane pane = new ScrollPane(cont, Styles.smallPane);
-        pane.setScrollingDisabled(true, false);
-        pane.setScrollYForce(teamScroll);
-        pane.update(() -> teamScroll = pane.getScrollY());
-        pane.setOverscroll(false, false);
-        table.add(pane).maxHeight(Scl.scl(row * 10 * 5));
-    }
-
-    float teamScroll;
 
     float getDisplayWidth() {
         return getWidth() - (find("buttons") == null ? 1 : find("buttons").getWidth());
