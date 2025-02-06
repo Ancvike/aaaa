@@ -10,6 +10,7 @@ public class Informatis extends Mod {
     public void init(){
         Events.on(ClientLoadEvent.class, e -> {
             WindowManager.init();
+
         });
     }
 }

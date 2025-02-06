@@ -64,7 +64,7 @@ public class MapEditorWindow extends Window {
             Lines.stroke(Scl.scl(2f), Pal.accent);
 
             if (!drawBlock.isMultiblock() || tool == EditorTool.eraser) {
-                if (tool.edit && (!mobile || drawing)) {
+                if (!mobile || drawing) {
                     Lines.poly(brushPolygons[2], tile.x * 8 - 4, tile.y * 8 - 4, scaling);
                 }
             }
@@ -121,23 +121,8 @@ public class MapEditorWindow extends Window {
     }
 
     enum EditorTool {
-        eraser("eraseores") {
-            {
-                edit = true;
-            }
-        };
+        eraser() {
 
-        /**
-         * All the internal alternate placement modes of this tool.
-         */
-        public final String[] altModes;
-        /**
-         * Whether this tool causes canvas changes when touched.
-         */
-        public boolean edit;
-
-        EditorTool(String... altModes) {
-            this.altModes = altModes;
         }
     }
 }
